@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import BottomButtonRow from './BottomButtonRow';
 import { status, dimensions } from '../utils/constants';
-import { upload } from '../nft/upload';
 
 const useStyles = makeStyles({
   container: {
@@ -47,10 +46,20 @@ const DataFormScreen = ({ navigateToVideoScreen, canvasImage }) => {
     initialValues: {
       title: '',
       description: '',
+      file: canvasImage,
     },
     validationSchema,
-    onSubmit: async ({ title, description }) => {
-      upload(canvasImage);
+    onSubmit: async ({ file, title, description}) => {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('title', title);
+      fd.append('description', description);
+      fetch('/session', {
+        method: 'POST',
+        body: fd,
+      })
+        .then(res => res.json())
+        .then(json => console.log('##response: ', json));
     }
   });
   

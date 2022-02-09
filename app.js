@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
-const bodyParser = require('body-parser');
 const app = express();
 const server = require('http').createServer(app);
 const multer = require('multer');
@@ -35,8 +34,8 @@ server.listen(USE_PORT, function() {
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cors());
 
 app.get('/settings', function(req, res) {
@@ -72,10 +71,7 @@ app.get('/*', function (req, res) {
 });
 
 app.post('/session', upload.single('file'), (req, res) => {
-  const file = req.body.file;
-  const picType = req.body.type;
-  const sessionInfo = req.body.sessionInfo;
-  console.log(sessionInfo)
+  const { file, title, description } = req.body;
   const b64string = file.slice(file.indexOf(','));
   var success = {
     picture: null,
@@ -83,8 +79,7 @@ app.post('/session', upload.single('file'), (req, res) => {
   }
   let buf = Buffer.from(b64string, 'base64');
   let rando = Math.floor(Math.random() * Math.pow(10, 9));
-  console.log('file received?');
-  const imageFilename = `./uploads/${rando}_Pic.${picType}`;
+  const imageFilename = `./uploads/image-${rando}.jpg`;
     fs.writeFile(imageFilename, buf, async function(err) {
       if(err) {
         success.picture = false;
