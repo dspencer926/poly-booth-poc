@@ -8,10 +8,8 @@ const cors = require('cors');
 const { pinFileToIPFS, getMetadata } = require('./nft/pinata');
 const { mintNFT } = require('./nft/mint-nft');
 const {
-  PINATA_BASE_URL,
   PORT,
 } = process.env;
-
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -26,7 +24,6 @@ const upload = multer({
   limits: { fieldSize: 25 * 1024 * 1024 }
 })
 const fs = require('fs');
-const pinataBaseUrl = PINATA_BASE_URL;
 const USE_PORT = PORT || 3001;
 server.listen(USE_PORT, function() {
   console.log(`listening on port ${PORT}`);
@@ -38,74 +35,47 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cors());
 
-app.get('/settings', function(req, res) {
-  console.log('settings');
-  let settings = fs.readFileSync('./activationData/settings.json');
-  res.send(settings);
-})
-
-app.get('/logo', function(req, res) {
-  console.log('logo');
-  let logo = fs.readFileSync('./activationData/logo.png')
-  res.send(logo)
-})
-
-app.get('/digitalprops/:param', function(req, res) {
-  if (req.params.param === 'file_names') {
-    fs.readdir('./activationData/digitalProps', (err, files) => {
-      files = files.filter(name => {
-        return name[0] !== '.';
-      })
-      res.json({files});
-    });
-  } else {
-    fs.readdir('./activationData/digitalProps', (err, files) => {
-      let prop = fs.readFileSync(`./activationData/digitalProps/${req.params.param}`)
-      res.send(prop);
-    })
-  }
-})
-
-app.get('/*', function (req, res) {
+app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
 app.post('/session', upload.single('file'), (req, res) => {
-  const { file, title, description } = req.body;
+  const { file, title, description, address } = req.body;
   const b64string = file.slice(file.indexOf(','));
-  var success = {
-    picture: null,
-    text: null,
-  }
   let buf = Buffer.from(b64string, 'base64');
   let rando = Math.floor(Math.random() * Math.pow(10, 9));
   const imageFilename = `./uploads/image-${rando}.jpg`;
     fs.writeFile(imageFilename, buf, async function(err) {
       if(err) {
-        success.picture = false;
-        return console.log(err);
+        console.error(err);
+        return res.status(500).send(err);
       }
-      const jsonFilename = `./uploads/aaa.json`;
       const imageUpload = await pinFileToIPFS(imageFilename);
       const { IpfsHash } = imageUpload.data;
       console.log('##image upload hash: ', IpfsHash);
-      const metaData = getMetadata(IpfsHash);
-      const metaDataFilename = `./uploads/meta-data.json`
+      const metaData = getMetadata({
+        hash: IpfsHash,
+        title,
+        description,
+      });
+      const metaDataFilename = `./uploads/metadata-${rando}.json`
       fs.writeFile(metaDataFilename, metaData, async function(err) {
-        if(err) {
-          success.text = false;
-          return console.log(err);
+        if (err) {
+          return res.status(500).send(err);
         }
         const metaDataUpload = await pinFileToIPFS(metaDataFilename);
         const metaDataHash = metaDataUpload.data.IpfsHash;
-        const metaDataUrl = `${pinataBaseUrl}${metaDataHash}`;
+        const metaDataUrl = `ipfs://${metaDataHash}`;
         console.log('##before mint NFT');
-        const nftSubmit = await mintNFT(metaDataUrl);
+        const nftSubmit = await mintNFT(metaDataUrl, address);
         console.log('##after mint NFT');
-        if (nftSubmit.transactionHash) {
-          res.json({message: 'success!'});
+        if (nftSubmit.transactionReceipt) {
+          res.status(200).json({
+            txId: nftSubmit.transactionReceipt.transactionHash,
+            nonce: nftSubmit.nonce,
+          });
         } else {
-          res.json({message: 'error :('})
+          res.status(500).json({ success: false })
         }
       }); 
     });

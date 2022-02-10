@@ -28,6 +28,9 @@ const useStyles = makeStyles({
     height: 96,
     padding: 36,
   },
+  leftButton: {
+    width: 142,
+  },
   centerButton: {
     width: 96,
   },
@@ -76,11 +79,18 @@ const BottomButtonRow = ({
     [status.DATA_FORM_SCREEN]: {
       left: {
         label: copy.BACK,
-        classes: `${classes.button} ${classes.rightButton}`,
+        classes: `${classes.button} ${classes.leftButton}`,
         startIcon: <NavigateBeforeIcon />,
       },
       right: {
         label: copy.NEXT,
+        classes: `${classes.button} ${classes.rightButton}`,
+        endIcon: <NavigateNextIcon />,
+      },
+    },
+    [status.INSTRUCTION_SCREEN]: {
+      right: {
+        label: copy.TAKE_ANOTHER,
         classes: `${classes.button} ${classes.rightButton}`,
         endIcon: <NavigateNextIcon />,
       },
@@ -106,7 +116,8 @@ const BottomButtonRow = ({
         )}
       </Grid>
       <Grid className={classes.rightBox} item md={4}>
-        {!buttonData[screenStatus].right?.shouldHide && (
+        {buttonData[screenStatus].right &&
+        !buttonData[screenStatus].right.shouldHide && (
           <RowButton
             onClick={onClickRightButton}
             {...buttonData[screenStatus].right}

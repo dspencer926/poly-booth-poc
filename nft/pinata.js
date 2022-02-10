@@ -4,17 +4,10 @@ const fs = require('fs');
 const FormData = require('form-data');
 const { PINATA_JWT } = process.env;
 
-const getMetadata = (hash) => JSON.stringify({
-  "attributes" : [ {
-    "trait_type" : "Name",
-    "value" : "Test-image"
-  }, {
-    "trait_type" : "Ballin status",
-    "value" : 100
-  } ],
-  "description" : "NFT Booth Image",
+const getMetadata = ({ title, description, hash }) => JSON.stringify({
+  "description" : description,
   "image" : `ipfs://${hash}`,
-  "name" : "Memories"
+  "name" : title
 })
 
 const pinFileToIPFS = (filename) => {

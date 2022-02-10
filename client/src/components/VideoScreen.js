@@ -44,7 +44,7 @@ const VideoScreen = ({ navigateToPropScreen, setCanvasImage }) => {
   const goToPropScreen = () => {
     confirmPic();
     navigateToPropScreen();
-  }
+  };
 
   return (
     <Box className={classes.container}>

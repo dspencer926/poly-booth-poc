@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   page: {
     background: '#f9f9f9',
     boxSizing: 'border-box',
-    height: '100vh',
+    minHeight: '100vh',
     padding: 32,
   }
 });

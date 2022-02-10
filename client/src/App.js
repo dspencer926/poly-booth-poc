@@ -1,16 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import FrontPage from './pages/FrontPage'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { purple } from '@mui/material/colors'
+import { yellow } from '@mui/material/colors'
 import Layout from './layout/Layout'
 import './App.css';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#fefefe'
+      main: '#333'
     },
-    secondary: purple
+    secondary: yellow
   },
 })
 
