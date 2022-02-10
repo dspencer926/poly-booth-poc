@@ -44,7 +44,7 @@ app.post('/session', upload.single('file'), (req, res) => {
   const b64string = file.slice(file.indexOf(','));
   let buf = Buffer.from(b64string, 'base64');
   let rando = Math.floor(Math.random() * Math.pow(10, 9));
-  const imageFilename = `./uploads/image-${rando}.jpg`;
+  const imageFilename = `image-${rando}.jpg`;
     fs.writeFile(imageFilename, buf, async function(err) {
       if(err) {
         console.error(err);
@@ -52,13 +52,12 @@ app.post('/session', upload.single('file'), (req, res) => {
       }
       const imageUpload = await pinFileToIPFS(imageFilename);
       const { IpfsHash } = imageUpload.data;
-      console.log('##image upload hash: ', IpfsHash);
       const metaData = getMetadata({
         hash: IpfsHash,
         title,
         description,
       });
-      const metaDataFilename = `./uploads/metadata-${rando}.json`
+      const metaDataFilename = `metadata-${rando}.json`;
       fs.writeFile(metaDataFilename, metaData, async function(err) {
         if (err) {
           return res.status(500).send(err);
