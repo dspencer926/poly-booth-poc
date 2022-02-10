@@ -58,10 +58,12 @@ app.post('/session', upload.single('file'), (req, res) => {
         description,
       });
       const metaDataFilename = `metadata-${rando}.json`;
+      console.log('##before write metadata');
       fs.writeFile(metaDataFilename, metaData, async function(err) {
         if (err) {
           return res.status(500).send(err);
         }
+        console.log('##before pin metadata');
         const metaDataUpload = await pinFileToIPFS(metaDataFilename);
         const metaDataHash = metaDataUpload.data.IpfsHash;
         const metaDataUrl = `ipfs://${metaDataHash}`;
