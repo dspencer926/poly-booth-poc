@@ -4,6 +4,9 @@ import Screen from '../components/VideoScreen';
 import DataFormScreen from '../components/DataFormScreen';
 import InstructionScreen from '../components/InstructionScreen';
 import { status } from '../utils/constants';
+import io from 'socket.io-client';
+
+const socket = io.connect('/');
 
 const FrontPage = () => {
   const [screenStatus, setScreenStatus] = useState(status.VIDEO_SCREEN);
@@ -12,7 +15,7 @@ const FrontPage = () => {
   const navigateToVideoScreen = () => setScreenStatus(status.VIDEO_SCREEN);
   const navigateToDataFormScreen = () => setScreenStatus(status.DATA_FORM_SCREEN);
   const navigateToInstructionScreen = () => setScreenStatus(status.INSTRUCTION_SCREEN);
-  
+
   return (
     <Container>
       {screenStatus === status.VIDEO_SCREEN && (
@@ -32,6 +35,7 @@ const FrontPage = () => {
           navigateToInstructionScreen={navigateToInstructionScreen}
           canvasImage={canvasImage}
           setTxId={setTxId}
+          socket={socket}
         />
       )}
       {screenStatus === status.INSTRUCTION_SCREEN && (

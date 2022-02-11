@@ -3,26 +3,14 @@ const path = require('path');
 const logger = require('morgan');
 const app = express();
 const server = require('http').createServer(app);
-const multer = require('multer');
 const cors = require('cors');
+const socket = require('socket.io')(server);
 const { pinFileToIPFS, getMetadata } = require('./nft/pinata');
 const { mintNFT } = require('./nft/mint-nft');
 const {
   PORT,
 } = process.env;
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '/uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, 'newPic.jpg')
-  }
-})
-const upload = multer({ 
-  dest: storage,
-  limits: { fieldSize: 25 * 1024 * 1024 }
-})
 const fs = require('fs');
 const USE_PORT = PORT || 3001;
 server.listen(USE_PORT, function() {
@@ -35,16 +23,13 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(cors());
 
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'client/build/index.html'));
-});
-
-app.post('/session', upload.single('file'), (req, res) => {
-  const { file, title, description, address } = req.body;
-  const b64string = file.slice(file.indexOf(','));
-  let buf = Buffer.from(b64string, 'base64');
-  let rando = Math.floor(Math.random() * Math.pow(10, 9));
-  const imageFilename = `image-${rando}.jpg`;
+socket.on('connection', client => {
+  client.on('mint-nft', data => {
+    const { file, title, description, address } = data;
+    const b64string = file.slice(file.indexOf(','));
+    let buf = Buffer.from(b64string, 'base64');
+    let rando = Math.floor(Math.random() * Math.pow(10, 9));
+    const imageFilename = path.join(__dirname, `uploads/image-${rando}.jpg`);
     fs.writeFile(imageFilename, buf, async function(err) {
       if(err) {
         console.error(err);
@@ -52,18 +37,17 @@ app.post('/session', upload.single('file'), (req, res) => {
       }
       const imageUpload = await pinFileToIPFS(imageFilename);
       const { IpfsHash } = imageUpload.data;
+      console.log('##image upload hash: ', IpfsHash);
       const metaData = getMetadata({
         hash: IpfsHash,
         title,
         description,
       });
-      const metaDataFilename = `metadata-${rando}.json`;
-      console.log('##before write metadata');
+      const metaDataFilename = path.join(__dirname, `uploads/metadata-${rando}.json`);
       fs.writeFile(metaDataFilename, metaData, async function(err) {
         if (err) {
           return res.status(500).send(err);
         }
-        console.log('##before pin metadata');
         const metaDataUpload = await pinFileToIPFS(metaDataFilename);
         const metaDataHash = metaDataUpload.data.IpfsHash;
         const metaDataUrl = `ipfs://${metaDataHash}`;
@@ -71,15 +55,22 @@ app.post('/session', upload.single('file'), (req, res) => {
         const nftSubmit = await mintNFT(metaDataUrl, address);
         console.log('##after mint NFT');
         if (nftSubmit.transactionReceipt) {
-          res.status(200).json({
+          socket.emit('response', ({
             txId: nftSubmit.transactionReceipt.transactionHash,
             nonce: nftSubmit.nonce,
-          });
+          }))
         } else {
-          res.status(500).json({ success: false })
+          socket.emit('response', ({
+            error: true,
+          }))
         }
       }); 
     });
+  });
+});
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
 /* handling 404 */

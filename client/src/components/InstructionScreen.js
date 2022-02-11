@@ -55,7 +55,6 @@ const InstructionScreen = ({
 
   useEffect(() => {
     const url = `${POLYGON_SCAN_BASE_URL}${txId}`;
-    const encoded = encodeURIComponent(url);
     QRCode.toCanvas(canvasRef.current, url, function (error) {
       if (error) console.error(error)
     });

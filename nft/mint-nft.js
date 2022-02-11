@@ -13,9 +13,8 @@ const nftContract = new web3.eth.Contract(contract.abi, CONTRACT_ADDRESS);
 
 async function mintNFT(tokenURI, toAddress) {
   try {
-    const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, 'latest'); //get latest nonce
-    console.log('##nonce: ', nonce);
-    //the transaction
+    const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, 'latest');
+
     const tx = {
       'from': PUBLIC_KEY,
       'to': CONTRACT_ADDRESS,
@@ -25,7 +24,6 @@ async function mintNFT(tokenURI, toAddress) {
       'data': nftContract.methods.mintNFT(toAddress, tokenURI).encodeABI()
     };
     const signedTx = await web3.eth.accounts.signTransaction(tx, PRIVATE_KEY);
-    console.log('##signedTx: ', signedTx);
     const transactionReceipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     
     console.log(`Transaction receipt: ${JSON.stringify(transactionReceipt)}`);

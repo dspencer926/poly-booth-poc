@@ -87,6 +87,7 @@ const DataFormScreen = ({
   navigateToInstructionScreen,
   canvasImage,
   setTxId,
+  socket,
 }) => {
   const classes = useStyles();
   const videoRef = useRef(null);
@@ -101,24 +102,14 @@ const DataFormScreen = ({
       address: '',
     },
     validationSchema,
-    onSubmit: async ({ file, title, description, address }) => {
+    onSubmit: async (data) => {
       setIsLoading(true); 
-      const fd = new FormData();
-      fd.append('file', file);
-      fd.append('title', title);
-      fd.append('description', description);
-      fd.append('address', address);
-      fetch('/session', {
-        method: 'POST',
-        body: fd,
-      })
-        .then(res => res.json())
-        .then(json => {
-          setIsLoading(false);
-          setTxId(json.txId);
-          console.log('##response: ', json);
-          navigateToInstructionScreen();
-        });
+      socket.emit('mint-nft', (data));
+      socket.on('response', data => {
+        setIsLoading(false);
+        setTxId(data.txId);
+        navigateToInstructionScreen();
+      });
     }
   });
 

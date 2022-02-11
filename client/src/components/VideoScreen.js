@@ -25,7 +25,11 @@ const useStyles = makeStyles({
   },
 });
 
-const VideoScreen = ({ navigateToPropScreen, setCanvasImage }) => {
+const VideoScreen = ({
+  navigateToPropScreen,
+  setCanvasImage,
+  socket,
+}) => {
   const classes = useStyles();
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -39,6 +43,7 @@ const VideoScreen = ({ navigateToPropScreen, setCanvasImage }) => {
     videoRef,
     canvasRef,
     setCanvasImage,
+    socket,
   });
 
   const goToPropScreen = () => {
