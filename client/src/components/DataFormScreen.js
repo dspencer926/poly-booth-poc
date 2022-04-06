@@ -124,7 +124,7 @@ const DataFormScreen = ({
         (result) => {
           qrScanner.stop();
           videoRef.current.pause();
-          const ethAddress = result.split(':').pop();
+          const ethAddress = result.split(':').pop().split('@')[0];
           formik.setFieldValue('address', ethAddress);
           formik.setTouched({ 'address': true });
           setIsQrModalOpen(false);
