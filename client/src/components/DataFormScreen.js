@@ -5,7 +5,6 @@ import { useFormik } from 'formik';
 import { makeStyles } from '@mui/styles';
 import {
   Box,
-  CircularProgress,
   TextField,
   Typography,
   Modal,
@@ -17,6 +16,7 @@ import QrCode2Icon from '@mui/icons-material/QrCode2';
 import CloseIcon from '@mui/icons-material/Close';
 import BottomButtonRow from './BottomButtonRow';
 import { status, dimensions } from '../utils/constants';
+import LoadingModal from './LoadingModal'
 
 const useStyles = makeStyles({
   container: {
@@ -217,23 +217,10 @@ const DataFormScreen = ({
           </Box>
         </Fade>
       </Modal>
-      <Modal
-        className={classes.modalCentered}
-        open={isLoading}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Fade in={isLoading}>
-          <Box className={classes.modalContainer}>
-            <Box className={classes.modalContent}>
-              <Typography>
-                Please wait. This may take a couple minutes
-              </Typography>
-              <CircularProgress color="secondary" />
-            </Box>
-          </Box>
-        </Fade>
-      </Modal>
+      <LoadingModal
+        isOpen={isLoading}
+        socket={socket}
+      />
     </Box>
   );
 };

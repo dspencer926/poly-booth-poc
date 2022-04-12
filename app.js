@@ -36,6 +36,7 @@ socket.on('connection', client => {
         return res.status(500).send(err);
       }
       const imageUpload = await pinFileToIPFS(imageFilename);
+      socket.emit('imageUploaded');
       const { IpfsHash } = imageUpload.data;
       console.log('##image upload hash: ', IpfsHash);
       const metaData = getMetadata({
@@ -49,6 +50,7 @@ socket.on('connection', client => {
           return res.status(500).send(err);
         }
         const metaDataUpload = await pinFileToIPFS(metaDataFilename);
+        socket.emit('metaDataUploaded');     
         const metaDataHash = metaDataUpload.data.IpfsHash;
         const metaDataUrl = `ipfs://${metaDataHash}`;
         console.log('##before mint NFT');
