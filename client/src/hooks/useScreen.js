@@ -5,6 +5,7 @@ const useScreen = ({
   videoRef,
   canvasRef,
   setCanvasImage,
+
 }) => {
   const [count, setCount] = useState(null);                       //  number shown for count
   const [videoDimensions, setVideoDimensions] = useState({});     //  dimensions to use for canvas
@@ -19,6 +20,9 @@ const useScreen = ({
     const width = height * (1 + 1/3);
     const start = ((width - height) / 2) * -1;
     canv.drawImage(v, start, 0, width, height);
+    const overlay = new Image();
+    overlay.src = '/overlay';
+    canv.drawImage(overlay, -125, -125);
     setTimeout(videoToCanvas, 20);
   };
 
@@ -33,6 +37,7 @@ const useScreen = ({
   };
 
   const confirmPic = () => {
+    const canv = canvasRef.current.getContext('2d');
     setCanvasImage(canvasRef.current.toDataURL('image/jpg'));
   };
 
