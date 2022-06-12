@@ -20,6 +20,9 @@ const useStyles = makeStyles({
   canvas: {
     borderRadius: 32,
   },
+  canvas2: {
+    visibility: 'hidden',
+  },
   video: {
     display: 'none',
   },

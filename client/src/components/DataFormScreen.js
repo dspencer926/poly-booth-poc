@@ -104,7 +104,7 @@ const DataFormScreen = ({
     validationSchema,
     onSubmit: async (data) => {
       setIsLoading(true); 
-      socket.emit('mint-nft', (data));
+      socket.emit('mint-nft', ({ ...data, network: 'cardano' }));
       socket.on('response', data => {
         setIsLoading(false);
         setTxId(data.txId);
