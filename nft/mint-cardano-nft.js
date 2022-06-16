@@ -1,22 +1,18 @@
 require('dotenv').config();
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
-const contract = require("./artifacts/contracts/MyNFT.sol/MyNFT.json");
 const {
   CARDANO_API_URL,
-  PUBLIC_KEY,
-  PRIVATE_KEY,
-  CONTRACT_ADDRESS,
+  TANGO_CRYPTO_APP_ID,
+  TANGO_CRYPTO_API_KEY,
+  COLLECTION_ID,
 } = process.env
 
-const appId = 'd84809bd0eaf4a7897b573fd163734c7';
-// const appId = '877ca5dbdb574b7baaad4982d206c77e';
-const collectionId = '77851e969ee143eebe088d97257fba22';
-// const collectionId = '9be1b17ab7a94a9bad70f7a0f8637549'; // test
-const baseUrl = `https://cardano-mainnet.tangocrypto.com/${appId}`;
-const pinUrl = `${baseUrl}/v1/nft/collections/${collectionId}/tokens`;
-const saleUrl = `${baseUrl}/v1/nft/collections/${collectionId}/sales`;
-const apiKey = '26139354f7f54d189f84fe463d778606';
+// const TANGO_CRYPTO_APP_ID = '877ca5dbdb574b7baaad4982d206c77e'; // test
+// const COLLECTION_ID = '9be1b17ab7a94a9bad70f7a0f8637549'; // test
+const baseUrl = `${CARDANO_API_URL}/${TANGO_CRYPTO_APP_ID}`;
+const pinUrl = `${baseUrl}/v1/nft/collections/${COLLECTION_ID}/tokens`;
+const saleUrl = `${baseUrl}/v1/nft/collections/${COLLECTION_ID}/sales`;
+
 // const blockTestUrl = 'https://cardano-mainnet.tangocrypto.com/d84809bd0eaf4a7897b573fd163734c7/v1/blocks/latest';
 
 async function mintCardanoNFT(tokenURI, base64, toAddress, title, description) {
@@ -39,7 +35,7 @@ async function mintCardanoNFT(tokenURI, base64, toAddress, title, description) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
+        'x-api-key': TANGO_CRYPTO_API_KEY,
       },
       body: JSON.stringify(pinBody),
     });
@@ -61,7 +57,7 @@ async function mintCardanoNFT(tokenURI, base64, toAddress, title, description) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          'x-api-key': TANGO_CRYPTO_API_KEY,
         },
         body: JSON.stringify(saleBody),
       });
