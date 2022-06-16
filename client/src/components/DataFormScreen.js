@@ -11,6 +11,10 @@ import {
   InputAdornment,
   IconButton,
   Fade,
+  Select,
+  InputLabel,
+  MenuItem,
+  FormControl,
 } from '@mui/material';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import CloseIcon from '@mui/icons-material/Close';
@@ -25,7 +29,6 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     margin: '0 auto',
     padding: '64px 0',
-    textAlign: 'center',
     width: dimensions.SCREEN_WIDTH,
   },
   form: {
@@ -37,7 +40,7 @@ const useStyles = makeStyles({
     margin: '12px 0',
   },
   img: {
-    margin: 'auto',
+    margin: '0 auto 24px',
   },
   modalCentered: {
     alignItems: 'flex',
@@ -68,6 +71,10 @@ const useStyles = makeStyles({
     position: 'absolute !important',
     top: 12,
   },
+  cardanoIframe: {
+    minWidth: 500,
+    minHeight: 780,
+  }
 });
 
 const validationSchema = yup.object({
@@ -77,9 +84,11 @@ const validationSchema = yup.object({
   description: yup
     .string()
     .required('Please enter a description'),
+  network: yup
+    .string()
+    .required('Please select a network'),
   address: yup
     .string()
-    .required('Please enter an address'), // TODO: verify that this is a valid ETH address
 });
 
 const DataFormScreen = ({
@@ -94,24 +103,36 @@ const DataFormScreen = ({
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const closeQrModal = () => setIsQrModalOpen(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentLink, setPaymentLink] = useState(null);
   const formik = useFormik({
     initialValues: {
       title: '',
       description: '',
       file: canvasImage,
       address: '',
+      network: '',
     },
     validationSchema,
     onSubmit: async (data) => {
       setIsLoading(true); 
-      socket.emit('mint-nft', ({ ...data, network: 'cardano' }));
+      socket.emit('mint-nft', (data));
       socket.on('response', data => {
+        console.log('##data: ', data);
         setIsLoading(false);
-        setTxId(data.txId);
-        navigateToInstructionScreen();
+        if (data.txId) {
+          setTxId(data.txId);
+          navigateToInstructionScreen();
+        } else if (data.paymentLink) {
+          console.log('##data.paymentLink: ', data.paymentLink);
+          setPaymentLink(data.paymentLink);
+        }
       });
     }
   });
+
+  const closePurchaseModal = () => {
+    setPaymentLink(null);
+  }
 
   const getQrCode = () => {
     setIsQrModalOpen(true);
@@ -144,6 +165,22 @@ const DataFormScreen = ({
       />
       <form onSubmit={formik.handleSubmit}>
         <Box className={classes.form}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Network</InputLabel>
+            <Select
+              id="network"
+              placeholder="Network"
+              name="network"
+              variant="outlined"
+              value={formik.values.network}
+              label="Network"
+              onChange={formik.handleChange}
+            >
+              <MenuItem value="ethereum">Ethereum</MenuItem>
+              <MenuItem value="polygon">Polygon</MenuItem>
+              <MenuItem value="cardano">Cardano</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             id="title"
             label="Title"
@@ -167,9 +204,9 @@ const DataFormScreen = ({
             error={formik.touched.description && !!formik.errors.description}
             helperText={formik.touched.description && formik.errors.description}
           />
-          <TextField
+          {formik.values.network !== 'cardano' && (<TextField
             id="address"
-            placeholder="Polygon Address"
+            placeholder="Wallet Address"
             name="address"
             variant="outlined"
             sx={{ margin: '12px 0' }}
@@ -187,7 +224,7 @@ const DataFormScreen = ({
                 </InputAdornment>
               )
             }}
-          />
+          />)}
         </Box>
       </form>
       <BottomButtonRow
@@ -221,6 +258,30 @@ const DataFormScreen = ({
         isOpen={isLoading}
         socket={socket}
       />
+      <Modal
+        className={classes.modalCentered}
+        open={paymentLink}
+        onClose={closePurchaseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Fade in={paymentLink}>
+          <Box className={classes.modalContainer}>
+            <IconButton
+              className={classes.closeModalButton}
+              onClick={closePurchaseModal}
+            >
+              <CloseIcon />
+            </IconButton>
+            <iframe
+              src={paymentLink}
+              title="Purchase Cardano NFT"
+              className={classes.cardanoIframe}
+              allow={`clipboard-write self ${paymentLink}`}
+            />
+          </Box>
+        </Fade>
+      </Modal>
     </Box>
   );
 };

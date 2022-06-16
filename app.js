@@ -23,13 +23,14 @@ app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000
 app.use(cors());
 
 socket.on('connection', client => {
-  client.on('mint-nft', data => {
+  client.on('mint-nft', async (data) => {
     const { file, title, description, address, network } = data;
     console.log('##network: ', network);
     const b64string = file.split(',')[1];
     if (network === 'cardano') {
       console.log('do ada minting');
-      mintCardanoNFT('metaDataUrl', b64string, address, title, description);
+      const paymentLink = await mintCardanoNFT('metaDataUrl', b64string, address, title, description);
+      socket.emit('response', ({ paymentLink }))
     } else {
       let buf = Buffer.from(b64string, 'base64');
       // generate random number for image and metadata filenames
