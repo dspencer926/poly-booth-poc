@@ -65,7 +65,7 @@ async function mintCardanoNFT(tokenURI, base64, toAddress, title, description) {
       console.log('##mintJson: ', mintJson);
       if (mintJson && mintJson.payment_link) {
         console.log('##paymentLink: ', mintJson.payment_link)
-        return mintJson.payment_link;
+        return { paymentLink: mintJson.payment_link };
       }
       throw new Error('no payment link!')
     } else {
@@ -74,6 +74,7 @@ async function mintCardanoNFT(tokenURI, base64, toAddress, title, description) {
   }
   catch (err) {
     console.error(err);
+    return { error: err };
   }
 };
 

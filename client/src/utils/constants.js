@@ -15,4 +15,12 @@ export const status = {
 export const dimensions = {
   SCREEN_HEIGHT: 600,
   SCREEN_WIDTH: 600,
-}
+};
+
+export const defaultConfig = {
+  isGreenScreenEnabled: true,
+  isDigitalPropsEnabled: false,
+  gColorValue: 100,
+  rColorValue: 100,
+  shouldDisplayRGControls: true,
+};

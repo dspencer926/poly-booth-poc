@@ -20,14 +20,13 @@ export function getEventLocation(element,event) {
   };
 };
 
-export function filterPixels(canvasRef, canvasContext, greenColor) {
-  // const { x, y } = getElementPosition(canvasRef.current);
+export function filterPixels(canvasContext, config) {
   const imageData = canvasContext.getImageData(0, 0, 600, 600);
   const data = imageData.data;
   for(let i = 0; i < data.length; i += 4) {
     const red = data[i];
     const green = data[i + 1]; 
-    if (green > 100 && red < 100) {
+    if (green > config.gColorValue && red < config.rColorValue) {
       data[i + 3] = 0;
     }
   }

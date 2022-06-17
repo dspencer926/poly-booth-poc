@@ -28,9 +28,8 @@ socket.on('connection', client => {
     console.log('##network: ', network);
     const b64string = file.split(',')[1];
     if (network === 'cardano') {
-      console.log('do ada minting');
-      const paymentLink = await mintCardanoNFT('metaDataUrl', b64string, address, title, description);
-      socket.emit('response', ({ paymentLink }))
+      const cardanoData = await mintCardanoNFT('metaDataUrl', b64string, address, title, description);
+      socket.emit('response', cardanoData)
     } else {
       let buf = Buffer.from(b64string, 'base64');
       // generate random number for image and metadata filenames

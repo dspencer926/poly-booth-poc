@@ -5,6 +5,7 @@ import { status, dimensions } from '../utils/constants';
 import Countdown from './Countdown';
 import useScreen from '../hooks/useScreen';
 import BottomButtonRow from './BottomButtonRow';
+import RGControls from './RGControls';
 
 const useStyles = makeStyles({
   container: {
@@ -32,6 +33,8 @@ const VideoScreen = ({
   navigateToPropScreen,
   setCanvasImage,
   socket,
+  config,
+  setConfig,
 }) => {
   const classes = useStyles();
   const videoRef = useRef();
@@ -42,11 +45,13 @@ const VideoScreen = ({
     isCountingDown,
     isFrozen,
     confirmPic,
+    applyGreenScreen,
   } = useScreen({
     videoRef,
     canvasRef,
     setCanvasImage,
     socket,
+    config,
   });
 
   const goToPropScreen = () => {
@@ -66,6 +71,13 @@ const VideoScreen = ({
         />
         <video className={classes.video} ref={videoRef} />
       </div>
+      {config.shouldDisplayRGControls && (
+        <RGControls
+          config={config}
+          setConfig={setConfig}
+          applyGreenScreen={applyGreenScreen}
+        />
+      )}
       <BottomButtonRow
         onClickCenterButton={startCountdown}
         onClickRightButton={goToPropScreen}

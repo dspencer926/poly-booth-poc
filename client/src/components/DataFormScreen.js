@@ -6,7 +6,6 @@ import { makeStyles } from '@mui/styles';
 import {
   Box,
   TextField,
-  Typography,
   Modal,
   InputAdornment,
   IconButton,
