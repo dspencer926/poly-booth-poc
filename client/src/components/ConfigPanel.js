@@ -62,6 +62,7 @@ const ConfigPanel = ({
   const {
     isGreenScreenEnabled,
     isDigitalPropsEnabled,
+    isKeyboardEnabled,
     shouldDisplayRGControls,
     availableNetworks,
   } = config;
@@ -183,6 +184,17 @@ const ConfigPanel = ({
             <Switch
               name="isDigitalPropsEnabled"
               checked={isDigitalPropsEnabled}
+              onChange={handleSwitch}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          </Box>
+        </Box>
+        <Box>
+          <Typography>Keyboard On/Off</Typography>
+          <Box>
+            <Switch
+              name="isKeyboardEnabled"
+              checked={isKeyboardEnabled}
               onChange={handleSwitch}
               inputProps={{ 'aria-label': 'controlled' }}
             />

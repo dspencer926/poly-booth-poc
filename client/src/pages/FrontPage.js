@@ -5,6 +5,7 @@ import DataFormScreen from '../components/DataFormScreen';
 import InstructionScreen from '../components/InstructionScreen';
 import ConfigPanel from '../components/ConfigPanel';
 import ClickDrag from '../components/ClickDrag';
+import Keyboard from '../components/Keyboard';
 import { status, defaultConfig } from '../utils/constants';
 import io from 'socket.io-client';
 
@@ -17,13 +18,14 @@ const FrontPage = () => {
   const [clicks, setClicks] = useState(0);
   const [config, setConfig] = useState(defaultConfig);
   const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
+  const [isKeyboardDisplayed, setIsKeyboardDisplayed] = useState(true);
   const navigateToVideoScreen = () => setScreenStatus(status.VIDEO_SCREEN);
   const navigateToClickDragScreen = () => setScreenStatus(status.CLICK_DRAG_SCREEN);
   const navigateToDataFormScreen = () => setScreenStatus(status.DATA_FORM_SCREEN);
   const navigateToInstructionScreen = () => setScreenStatus(status.INSTRUCTION_SCREEN);
   const openConfigPanel = () => setIsConfigPanelOpen(true);
   const closeConfigPanel = () => setIsConfigPanelOpen(false);
-  const { isDigitalPropsEnabled } = config;
+  const { isDigitalPropsEnabled, isKeyboardEnabled } = config;
 
   const onClickA = () => {
     if (clicks === 4) {
@@ -83,6 +85,9 @@ const FrontPage = () => {
         setConfig={setConfig}
         closeConfigPanel={closeConfigPanel}
       />
+      {isKeyboardEnabled && isKeyboardDisplayed && (
+        <Keyboard />
+      )}
     </Container>
   )
 }
