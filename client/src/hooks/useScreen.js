@@ -8,6 +8,7 @@ const useScreen = ({
   canvasRef,
   setCanvasImage,
   config,
+  overlay,
 }) => {
   const [count, setCount] = useState(null);                       //  number shown for count
   const [videoDimensions, setVideoDimensions] = useState({});     //  dimensions to use for canvas
@@ -51,9 +52,6 @@ const useScreen = ({
     const width = height * (1 + 1/3);
     const start = ((width - height) / 2) * -1;
     canv.drawImage(v, start, 0, width, height);
-    const overlay = new Image();
-    overlay.src = '/overlay';
-    canv.drawImage(overlay, -125, -125);
     setTimeout(videoToCanvas, 20);
   };
 
@@ -79,8 +77,9 @@ const useScreen = ({
     const foregroundImage = filterPixels(originalImage, config);
     canv.clearRect(0, 0, 600, 600);
     foreground.src = foregroundImage;
-    setTimeout(() => canv.drawImage(cardanoBG, 0, 0), 300);
-    setTimeout(() => canv.drawImage(foreground, 0, 0), 600);
+    setTimeout(() => canv.drawImage(cardanoBG, 0, 0), 100);
+    setTimeout(() => canv.drawImage(foreground, 0, 0), 200);
+    setTimeout(() => canv.drawImage(overlay, -125, -125), 300);
   }
 
   useEffect(() => {

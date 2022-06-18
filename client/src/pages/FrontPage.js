@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import Screen from '../components/VideoScreen';
 import DataFormScreen from '../components/DataFormScreen';
@@ -18,7 +18,8 @@ const FrontPage = () => {
   const [clicks, setClicks] = useState(0);
   const [config, setConfig] = useState(defaultConfig);
   const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
-  const [isKeyboardDisplayed, setIsKeyboardDisplayed] = useState(true);
+  const [overlay, setOverlay] = useState(null);
+
   const navigateToVideoScreen = () => setScreenStatus(status.VIDEO_SCREEN);
   const navigateToClickDragScreen = () => setScreenStatus(status.CLICK_DRAG_SCREEN);
   const navigateToDataFormScreen = () => setScreenStatus(status.DATA_FORM_SCREEN);
@@ -26,6 +27,12 @@ const FrontPage = () => {
   const openConfigPanel = () => setIsConfigPanelOpen(true);
   const closeConfigPanel = () => setIsConfigPanelOpen(false);
   const { isDigitalPropsEnabled, isKeyboardEnabled } = config;
+
+  useEffect(() => {
+    const overlay = new Image();
+    overlay.src = '/overlay';
+    setOverlay(overlay);
+  },[])
 
   const onClickA = () => {
     if (clicks === 4) {
@@ -55,6 +62,7 @@ const FrontPage = () => {
           setCanvasImage={setCanvasImage}
           config={config}
           setConfig={setConfig}
+          overlay={overlay}
         />
       )}
       {screenStatus === status.CLICK_DRAG_SCREEN && (
@@ -85,7 +93,7 @@ const FrontPage = () => {
         setConfig={setConfig}
         closeConfigPanel={closeConfigPanel}
       />
-      {isKeyboardEnabled && isKeyboardDisplayed && (
+      {isKeyboardEnabled && (
         <Keyboard />
       )}
     </Container>

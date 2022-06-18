@@ -35,6 +35,7 @@ const VideoScreen = ({
   socket,
   config,
   setConfig,
+  overlay
 }) => {
   const classes = useStyles();
   const videoRef = useRef();
@@ -52,6 +53,7 @@ const VideoScreen = ({
     setCanvasImage,
     socket,
     config,
+    overlay
   });
 
   const goToPropScreen = () => {
