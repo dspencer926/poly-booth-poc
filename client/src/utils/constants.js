@@ -23,6 +23,6 @@ export const defaultConfig = {
   isDigitalPropsEnabled: false,
   gColorValue: 100,
   rColorValue: 100,
-  shouldDisplayRGControls: true,
+  shouldDisplayRGControls: false,
   availableNetworks: ['cardano'],
 };

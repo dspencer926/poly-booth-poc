@@ -25,7 +25,7 @@ const FrontPage = () => {
   const closeConfigPanel = () => setIsConfigPanelOpen(false);
   const { isDigitalPropsEnabled } = config;
 
-  const onClickO = () => {
+  const onClickA = () => {
     if (clicks === 4) {
       setClicks(0);
       openConfigPanel();
@@ -38,9 +38,9 @@ const FrontPage = () => {
     <Container>
       {screenStatus === status.VIDEO_SCREEN && (
         <Typography variant="h3" align="center">
-          Welcome to P
-          <span onClick={onClickO}>o</span>
-          ly Booth!
+          Welcome to Fl
+          <span onClick={onClickA}>a</span>
+          shMint!
         </Typography>
       )}
       {screenStatus === status.VIDEO_SCREEN && (

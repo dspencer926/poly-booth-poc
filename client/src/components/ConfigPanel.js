@@ -8,7 +8,8 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-  IconButton
+  IconButton,
+  Button,
 } from '@mui/material';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import IndeterminateCheckBoxRoundedIcon from '@mui/icons-material/IndeterminateCheckBoxRounded';
@@ -66,9 +67,15 @@ const ConfigPanel = ({
   } = config;
   const handleSwitch = e => {
     const { name, checked } = e.target;
+    const newValues = {
+      [name]: checked,
+    }
+    if (name === 'isGreenScreenEnabled' && !checked) {
+      newValues.shouldDisplayRGControls = false;
+    }
     setConfig({
       ...config,
-      [name]: checked,
+      ...newValues,
     })
   };
 
@@ -88,7 +95,12 @@ const ConfigPanel = ({
       ...config,
       availableNetworks: newNetworks,
     })
-  }
+  };
+
+  const enterFullscreen = () => document.documentElement.requestFullscreen();
+
+  const exitFullscreen = () => document.exitFullscreen();
+
 
   return (
     <Modal
@@ -176,6 +188,8 @@ const ConfigPanel = ({
             />
           </Box>
         </Box>
+        <Button onClick={enterFullscreen}>Enter Fullscreen</Button>
+        <Button onClick={exitFullscreen}>Exit Fullscreen</Button>
       </Box>
     </Modal>
   )
