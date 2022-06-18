@@ -10,6 +10,7 @@ export const status = {
   DATA_FORM_SCREEN: 'data-form-screen',
   VIDEO_SCREEN: 'video-screen',
   INSTRUCTION_SCREEN: 'instruction-screen',
+  CLICK_DRAG_SCREEN: 'click-drag-screen',
 };
 
 export const dimensions = {
@@ -23,4 +24,5 @@ export const defaultConfig = {
   gColorValue: 100,
   rColorValue: 100,
   shouldDisplayRGControls: true,
+  availableNetworks: ['cardano'],
 };

@@ -4,6 +4,7 @@ import Screen from '../components/VideoScreen';
 import DataFormScreen from '../components/DataFormScreen';
 import InstructionScreen from '../components/InstructionScreen';
 import ConfigPanel from '../components/ConfigPanel';
+import ClickDrag from '../components/ClickDrag';
 import { status, defaultConfig } from '../utils/constants';
 import io from 'socket.io-client';
 
@@ -17,10 +18,12 @@ const FrontPage = () => {
   const [config, setConfig] = useState(defaultConfig);
   const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
   const navigateToVideoScreen = () => setScreenStatus(status.VIDEO_SCREEN);
+  const navigateToClickDragScreen = () => setScreenStatus(status.CLICK_DRAG_SCREEN);
   const navigateToDataFormScreen = () => setScreenStatus(status.DATA_FORM_SCREEN);
   const navigateToInstructionScreen = () => setScreenStatus(status.INSTRUCTION_SCREEN);
   const openConfigPanel = () => setIsConfigPanelOpen(true);
   const closeConfigPanel = () => setIsConfigPanelOpen(false);
+  const { isDigitalPropsEnabled } = config;
 
   const onClickO = () => {
     if (clicks === 4) {
@@ -42,10 +45,19 @@ const FrontPage = () => {
       )}
       {screenStatus === status.VIDEO_SCREEN && (
         <Screen
-          navigateToPropScreen={navigateToDataFormScreen}
+          navigateToPropScreen={
+            isDigitalPropsEnabled
+              ? navigateToClickDragScreen
+              : navigateToDataFormScreen
+          }
           setCanvasImage={setCanvasImage}
           config={config}
           setConfig={setConfig}
+        />
+      )}
+      {screenStatus === status.CLICK_DRAG_SCREEN && (
+        <ClickDrag
+          canvasImage={canvasImage}
         />
       )}
       {screenStatus === status.DATA_FORM_SCREEN && (
@@ -55,6 +67,7 @@ const FrontPage = () => {
           canvasImage={canvasImage}
           setTxId={setTxId}
           socket={socket}
+          config={config}
         />
       )}
       {screenStatus === status.INSTRUCTION_SCREEN && (

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Typography,
   Modal,
-  CircularProgress,
   Fade,
   Switch,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
   IconButton
 } from '@mui/material';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
@@ -20,7 +22,6 @@ const useStyles = makeStyles({
     justifyContent: 'flex',
   },
   modalContainer: {
-    alignItems: 'center',
     backgroundColor: '#fff',
     boxSizing: 'border-box',
     display: 'flex',
@@ -61,8 +62,8 @@ const ConfigPanel = ({
     isGreenScreenEnabled,
     isDigitalPropsEnabled,
     shouldDisplayRGControls,
+    availableNetworks,
   } = config;
-
   const handleSwitch = e => {
     const { name, checked } = e.target;
     setConfig({
@@ -70,6 +71,24 @@ const ConfigPanel = ({
       [name]: checked,
     })
   };
+
+  const handleCheckbox = e => {
+    const { name, checked } = e.target;
+    const newNetworks = [...availableNetworks];
+    if (checked) {
+      newNetworks.push(name);
+    } else {
+      if (availableNetworks.length <= 1) return;
+      const index = newNetworks.indexOf(name);
+      if (index > -1) {
+        newNetworks.splice(index, 1);
+      }
+    }
+    setConfig({
+      ...config,
+      availableNetworks: newNetworks,
+    })
+  }
 
   return (
     <Modal
@@ -112,9 +131,38 @@ const ConfigPanel = ({
         <Box>
           <Typography>Network Options</Typography>
           <Box>
-            <Typography>Ethereum</Typography>
-            <Typography>Polygon</Typography>
-            <Typography>Cardano</Typography>
+          <FormGroup>
+            <FormControlLabel
+              control={
+              <Checkbox
+                name="ethereum"
+                checked={availableNetworks.includes('ethereum')}
+                onChange={handleCheckbox}
+              />
+              }
+              label="Ethereum" 
+            />
+            <FormControlLabel
+              control={
+              <Checkbox
+                name="polygon"
+                checked={availableNetworks.includes('polygon')}
+                onChange={handleCheckbox}
+              />
+              }
+              label="Polygon" 
+            />
+            <FormControlLabel
+              control={
+              <Checkbox
+                name="cardano"
+                checked={availableNetworks.includes('cardano')}
+                onChange={handleCheckbox}
+              />
+              }
+              label="Cardano" 
+            />
+          </FormGroup>
           </Box>
         </Box>
         <Box>

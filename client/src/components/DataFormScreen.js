@@ -96,6 +96,7 @@ const DataFormScreen = ({
   canvasImage,
   setTxId,
   socket,
+  config,
 }) => {
   const classes = useStyles();
   const videoRef = useRef(null);
@@ -109,7 +110,7 @@ const DataFormScreen = ({
       description: '',
       file: canvasImage,
       address: '',
-      network: '',
+      network: config.availableNetworks[0],
     },
     validationSchema,
     onSubmit: async (data) => {
@@ -174,10 +175,13 @@ const DataFormScreen = ({
               value={formik.values.network}
               label="Network"
               onChange={formik.handleChange}
+              disabled={config.availableNetworks.length <= 1}
             >
-              <MenuItem value="ethereum">Ethereum</MenuItem>
-              <MenuItem value="polygon">Polygon</MenuItem>
-              <MenuItem value="cardano">Cardano</MenuItem>
+              {config.availableNetworks.map((val) => (
+                <MenuItem value={val} key={val}>
+                  {val.charAt(0).toUpperCase() + val.slice(1)}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <TextField

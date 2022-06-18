@@ -2,13 +2,13 @@ require('dotenv').config();
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const contract = require("./artifacts/contracts/MyNFT.sol/MyNFT.json");
 const {
-  API_URL,
+  POLYGON_API_URL,
   PUBLIC_KEY,
   PRIVATE_KEY,
   CONTRACT_ADDRESS,
 } = process.env
 
-const web3 = createAlchemyWeb3(API_URL);
+const web3 = createAlchemyWeb3(POLYGON_API_URL);
 const nftContract = new web3.eth.Contract(contract.abi, CONTRACT_ADDRESS);
 
 async function mintNFT(tokenURI, toAddress) {

@@ -28,7 +28,7 @@ socket.on('connection', client => {
     console.log('##network: ', network);
     const b64string = file.split(',')[1];
     if (network === 'cardano') {
-      const cardanoData = await mintCardanoNFT('metaDataUrl', b64string, address, title, description);
+      const cardanoData = await mintCardanoNFT(b64string, title, description);
       socket.emit('response', cardanoData)
     } else {
       let buf = Buffer.from(b64string, 'base64');
@@ -93,7 +93,6 @@ socket.on('connection', client => {
 });
 
 app.get('/overlay', function (req, res) {
-  console.log('##getOverlay')
   res.sendFile(path.join(__dirname, 'assets/overlay.png'));
 });
 

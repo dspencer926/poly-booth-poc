@@ -4,18 +4,18 @@ const {
   CARDANO_API_URL,
   TANGO_CRYPTO_APP_ID,
   TANGO_CRYPTO_API_KEY,
-  COLLECTION_ID,
+  CARDANO_COLLECTION_ID,
 } = process.env
 
 // const TANGO_CRYPTO_APP_ID = '877ca5dbdb574b7baaad4982d206c77e'; // test
-// const COLLECTION_ID = '9be1b17ab7a94a9bad70f7a0f8637549'; // test
+// const CARDANO_COLLECTION_ID = '9be1b17ab7a94a9bad70f7a0f8637549'; // test
 const baseUrl = `${CARDANO_API_URL}/${TANGO_CRYPTO_APP_ID}`;
-const pinUrl = `${baseUrl}/v1/nft/collections/${COLLECTION_ID}/tokens`;
-const saleUrl = `${baseUrl}/v1/nft/collections/${COLLECTION_ID}/sales`;
+const pinUrl = `${baseUrl}/v1/nft/collections/${CARDANO_COLLECTION_ID}/tokens`;
+const saleUrl = `${baseUrl}/v1/nft/collections/${CARDANO_COLLECTION_ID}/sales`;
 
 // const blockTestUrl = 'https://cardano-mainnet.tangocrypto.com/d84809bd0eaf4a7897b573fd163734c7/v1/blocks/latest';
 
-async function mintCardanoNFT(tokenURI, base64, toAddress, title, description) {
+async function mintCardanoNFT(base64, title, description) {
   try {
     console.log('Minting Cardano NFT ...');
     const pinBody = {
