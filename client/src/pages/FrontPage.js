@@ -5,7 +5,9 @@ import DataFormScreen from '../components/DataFormScreen';
 import InstructionScreen from '../components/InstructionScreen';
 import ConfigPanel from '../components/ConfigPanel';
 import ClickDrag from '../components/ClickDrag';
+import MainLogoContainer from '../components/MainLogoContainer';
 import { status, defaultConfig } from '../utils/constants';
+import CardanoLogo from '../assets/cardano-nyc-logo.png';
 import io from 'socket.io-client';
 
 const socket = io.connect('/');
@@ -93,6 +95,7 @@ const FrontPage = () => {
         setConfig={setConfig}
         closeConfigPanel={closeConfigPanel}
       />
+      <MainLogoContainer logo={CardanoLogo} />
     </Container>
   )
 }
