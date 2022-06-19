@@ -307,7 +307,7 @@ const DataFormScreen = ({
       />
       <Modal
         className={classes.modalCentered}
-        open={paymentLink}
+        open={!!paymentLink}
         onClose={closePurchaseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -321,7 +321,7 @@ const DataFormScreen = ({
               <CloseIcon />
             </IconButton>
             <iframe
-              src={paymentLink}
+              src={`${paymentLink}&random=${Math.floor(Math.random() * 1000)}`}
               title="Purchase Cardano NFT"
               className={classes.cardanoIframe}
               allow={`clipboard-write self ${paymentLink}`}
