@@ -53,7 +53,7 @@ const VideoScreen = ({
     setCanvasImage,
     socket,
     config,
-    overlay
+    overlay,
   });
 
   const goToPropScreen = () => {

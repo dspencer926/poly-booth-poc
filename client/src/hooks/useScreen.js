@@ -52,6 +52,7 @@ const useScreen = ({
     const width = height * (1 + 1/3);
     const start = ((width - height) / 2) * -1;
     canv.drawImage(v, start, 0, width, height);
+    canv.drawImage(overlay, -125, -125);
     setTimeout(videoToCanvas, 20);
   };
 

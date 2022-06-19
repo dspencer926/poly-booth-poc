@@ -2,6 +2,9 @@ import React, { useState, useRef } from 'react';
 import QrScanner from 'qr-scanner';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import Keyboard from 'react-simple-keyboard';
+import "react-simple-keyboard/build/css/index.css";
+
 import { makeStyles } from '@mui/styles';
 import {
   Box,
@@ -20,6 +23,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import BottomButtonRow from './BottomButtonRow';
 import { status, dimensions } from '../utils/constants';
 import LoadingModal from './LoadingModal'
+// import Keyboard from './Keyboard';
 
 const useStyles = makeStyles({
   container: {
@@ -73,7 +77,7 @@ const useStyles = makeStyles({
   cardanoIframe: {
     minWidth: 500,
     minHeight: 780,
-  }
+  },
 });
 
 const validationSchema = yup.object({
@@ -104,13 +108,16 @@ const DataFormScreen = ({
   const closeQrModal = () => setIsQrModalOpen(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentLink, setPaymentLink] = useState(null);
+  const [focusedInput, setFocusedInput] = useState(null);
+  const [keyboardLayout, setKeyboardLayout] = useState('default');
+  const { isKeyboardEnabled, availableNetworks } = config;
   const formik = useFormik({
     initialValues: {
       title: '',
       description: '',
       file: canvasImage,
       address: '',
-      network: config.availableNetworks[0],
+      network: availableNetworks[0],
     },
     validationSchema,
     onSubmit: async (data) => {
@@ -132,6 +139,35 @@ const DataFormScreen = ({
 
   const closePurchaseModal = () => {
     setPaymentLink(null);
+  }
+
+  const handleFocus = (e) => {
+    setFocusedInput(e.target.id);
+  }
+
+  const handleBlur = () => {};
+
+  const handleShift = () => {
+    const newLayout = keyboardLayout === "default" ? "shift" : "default";
+    setKeyboardLayout(newLayout);
+  };
+
+  const onKeyPress = (button) => {
+    if (button === '{tab}' || button === '{enter}') {
+      return;
+    } else if (button === '{shift}' || button === '{lock}') {
+      handleShift();
+    } else if (focusedInput) {
+      let newValue = formik.values[focusedInput];
+      if (button === '{bksp}') {
+        newValue = newValue.slice(0, -1);
+      } else if (button === '{space}') {
+        newValue = formik.values[focusedInput].concat(' ');
+      } else {
+        newValue = formik.values[focusedInput].concat(button);
+      }
+      formik.setFieldValue(focusedInput, newValue);
+    }
   }
 
   const getQrCode = () => {
@@ -195,6 +231,9 @@ const DataFormScreen = ({
             value={formik.values.title}
             error={formik.touched.title && !!formik.errors.title}
             helperText={formik.touched.title && formik.errors.title}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            focused={focusedInput === 'title'}
           />
           <TextField
             id="description"
@@ -206,6 +245,9 @@ const DataFormScreen = ({
             value={formik.values.description}
             error={formik.touched.description && !!formik.errors.description}
             helperText={formik.touched.description && formik.errors.description}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            focused={focusedInput === 'description'}
           />
           {formik.values.network !== 'cardano' && (<TextField
             id="address"
@@ -218,6 +260,8 @@ const DataFormScreen = ({
             value={formik.values.address}
             error={formik.touched.address && !!formik.errors.address}
             helperText={formik.touched.address && formik.errors.address}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             InputProps={{
               endAdornment: (
                 <InputAdornment>
@@ -285,6 +329,11 @@ const DataFormScreen = ({
           </Box>
         </Fade>
       </Modal>
+      <Keyboard
+        onKeyPress={onKeyPress}
+        layoutName={keyboardLayout}
+        // theme={classes.keyboard}
+      />
     </Box>
   );
 };

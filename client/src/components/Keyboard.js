@@ -101,7 +101,7 @@ const useStyles = makeStyles({
   }
 });
 
-const Keyboard = () => {
+const Keyboard = ({ onPressKey }) => {
   const classes = useStyles();
   const [isShifted, setIsShifted] = useState(false);
   const [keys, setKeys] = useState(lowerCaseKeys);
@@ -115,8 +115,11 @@ const Keyboard = () => {
   }, [isShifted])
 
   const clickKey = (e) => {
+    e.preventDefault();
     let key = e.target.innerHTML;
-    this.props.handleInput(key);
+    onPressKey(key);
+    // window.dispatchEvent(new KeyboardEvent('keydown', { key }));
+    // handleInput(key);
   }
 
   return (

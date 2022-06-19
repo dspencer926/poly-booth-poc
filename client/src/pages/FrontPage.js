@@ -5,7 +5,6 @@ import DataFormScreen from '../components/DataFormScreen';
 import InstructionScreen from '../components/InstructionScreen';
 import ConfigPanel from '../components/ConfigPanel';
 import ClickDrag from '../components/ClickDrag';
-import Keyboard from '../components/Keyboard';
 import { status, defaultConfig } from '../utils/constants';
 import io from 'socket.io-client';
 
@@ -32,7 +31,8 @@ const FrontPage = () => {
     const overlay = new Image();
     overlay.src = '/overlay';
     setOverlay(overlay);
-  },[])
+    // TODO: make state var for "loaded/ready"
+  }, [])
 
   const onClickA = () => {
     if (clicks === 4) {
@@ -52,7 +52,7 @@ const FrontPage = () => {
           shMint!
         </Typography>
       )}
-      {screenStatus === status.VIDEO_SCREEN && (
+      {screenStatus === status.VIDEO_SCREEN && overlay && (
         <Screen
           navigateToPropScreen={
             isDigitalPropsEnabled
@@ -93,9 +93,6 @@ const FrontPage = () => {
         setConfig={setConfig}
         closeConfigPanel={closeConfigPanel}
       />
-      {isKeyboardEnabled && (
-        <Keyboard />
-      )}
     </Container>
   )
 }
