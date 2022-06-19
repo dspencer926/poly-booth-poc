@@ -24,6 +24,7 @@ const getPinBody = ({ title, description, base64 }) => ({
       "description": description,
       "media_type": "image/jpg",
       "image": base64,
+      "price": 10000000,
       "metadata_attributes": [],
     }
   ]
@@ -106,13 +107,13 @@ async function mintCardanoNFT(base64, title, description) {
       let validate = result => result.status !== 'FOR_SALE';
       let response = await poll(fetchReport, validate, 1000);
       console.log('##response: ', response);
-      console.log('##saleBody: ', saleBody);
-      console.log('##saleUrl: ', saleUrl);
-      const mintResponse = await submitSale(saleBody);
-      console.log('##mintJson: ', mintResponse);
-      if (mintResponse && mintResponse.payment_link) {
-        console.log('##paymentLink: ', mintResponse.payment_link)
-        return { paymentLink: mintResponse.payment_link };
+      // console.log('##saleBody: ', saleBody);
+      // console.log('##saleUrl: ', saleUrl);
+      // const mintResponse = await submitSale(saleBody);
+      // console.log('##mintJson: ', mintResponse);
+      if (response && response.payment_link) {
+        console.log('##paymentLink: ', response.payment_link)
+        return { paymentLink: response.payment_link };
       }
       throw new Error('no payment link!')
     } else {
