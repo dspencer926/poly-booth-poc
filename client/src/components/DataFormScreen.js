@@ -104,8 +104,9 @@ const DataFormScreen = ({
 }) => {
   const classes = useStyles();
   const videoRef = useRef(null);
-  const iframeRef = useRef(null);
+  const iframeRef = useRef();
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [hasIframeBeenUpdated, setHasIframeBeenUpdated] = useState(false);
   const closeQrModal = () => setIsQrModalOpen(false);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentLink, setPaymentLink] = useState(null);
@@ -192,9 +193,23 @@ const DataFormScreen = ({
     });
   }
 
-  useEffect(() => {
-    iframeRef.current.src = `${paymentLink}&random=${Math.floor(Math.random() * 1000)}`;
-  }, [paymentLink]);
+  const onIframeLoad = (e) => {
+    if (!hasIframeBeenUpdated) {
+      setHasIframeBeenUpdated(true);
+      e.target.src = `${paymentLink}&random=${Math.floor(Math.random() * 1000)}`;
+    }
+  }
+
+  // useEffect(() => {
+  //   console.log('##iframeRed: ', iframeRef);
+  //   console.log('##iframe: ', document.getElementsByTagName('iframe'));
+  //   console.log('##iframe[0]: ', document.getElementsByTagName('iframe')[0]);
+  //   if (iframeRef.current && paymentLink) {
+  //     const newUrl = `${paymentLink}&random=${Math.floor(Math.random() * 1000)}`
+  //     iframeRef.current.src = newUrl;
+  //     console.log('##set iframe src: ', newUrl)
+  //   }
+  // }, [paymentLink, iframeRef]);
   
   return (
     <Box className={classes.container}>
@@ -331,6 +346,7 @@ const DataFormScreen = ({
               title="Purchase Cardano NFT"
               className={classes.cardanoIframe}
               allow={`clipboard-write self ${paymentLink}`}
+              onLoad={onIframeLoad}
             />
           </Box>
         </Fade>
