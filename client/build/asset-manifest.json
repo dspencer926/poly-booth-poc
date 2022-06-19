@@ -1,11 +1,11 @@
 {
   "files": {
     "main.css": "/static/css/main.ca18d784.css",
-    "main.js": "/static/js/main.90d3d0bd.js",
+    "main.js": "/static/js/main.3a8fd451.js",
     "static/js/684.8e7a62fe.chunk.js": "/static/js/684.8e7a62fe.chunk.js",
     "static/media/cardano-nyc-logo.png": "/static/media/cardano-nyc-logo.aa9bbd2aac23269c8f89.png",
-    "static/media/cardano.png": "/static/media/cardano.c8e0aa8c0ff447d4ac6c.png",
     "static/media/polygonscan-screenshot.jpeg": "/static/media/polygonscan-screenshot.68b79f6321da34e563ef.jpeg",
+    "static/media/backdrop.png": "/static/media/backdrop.9157ffdfca35b7091e46.png",
     "static/media/metamask-screenshot-2.png": "/static/media/metamask-screenshot-2.aa41beb96cba136e6bf2.png",
     "static/media/metamask-screenshot.jpeg": "/static/media/metamask-screenshot.4d8a2bd07966e7547d1c.jpeg",
     "static/media/mustache.png": "/static/media/mustache.9f190bc0d61fba35c0b1.png",
@@ -14,11 +14,11 @@
     "static/media/arrows.png": "/static/media/arrows.8d85318b28944c9781cd.png",
     "index.html": "/index.html",
     "main.ca18d784.css.map": "/static/css/main.ca18d784.css.map",
-    "main.90d3d0bd.js.map": "/static/js/main.90d3d0bd.js.map",
+    "main.3a8fd451.js.map": "/static/js/main.3a8fd451.js.map",
     "684.8e7a62fe.chunk.js.map": "/static/js/684.8e7a62fe.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ca18d784.css",
-    "static/js/main.90d3d0bd.js"
+    "static/js/main.3a8fd451.js"
   ]
 }

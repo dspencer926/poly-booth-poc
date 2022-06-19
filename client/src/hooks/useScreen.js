@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { dimensions } from '../utils/constants';
 import { getEventLocation, filterPixels } from '../utils/helpers';
-import cardanoImage from '../assets/cardano.png';
+import cardanoImage from '../assets/backdrop.png';
 
 const useScreen = ({                        
   videoRef,
