@@ -19,7 +19,7 @@ const makeGetTokenUrl = (id) => `${baseUrl}/v1/nft/collections/${CARDANO_COLLECT
 const getPinBody = ({ title, description, base64 }) => ({
   tokens: [
     {
-      "asset_name": "FlashMint2",
+      "asset_name": title,
       "name": title,
       "description": description,
       "media_type": "image/jpg",
