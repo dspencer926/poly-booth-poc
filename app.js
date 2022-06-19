@@ -8,6 +8,8 @@ const socket = require('socket.io')(server);
 const { pinFileToIPFS, getMetadata } = require('./nft/pinata');
 const { mintNFT } = require('./nft/mint-nft');
 const { mintCardanoNFT } = require('./nft/mint-cardano-nft');
+// const { mintCardanoNFT } = require('./nft/test-cardano');
+
 const { PORT } = process.env;
 
 const fs = require('fs');

@@ -12,60 +12,107 @@ const {
 const baseUrl = `${CARDANO_API_URL}/${TANGO_CRYPTO_APP_ID}`;
 const pinUrl = `${baseUrl}/v1/nft/collections/${CARDANO_COLLECTION_ID}/tokens`;
 const saleUrl = `${baseUrl}/v1/nft/collections/${CARDANO_COLLECTION_ID}/sales`;
+const makeGetTokenUrl = (id) => `${baseUrl}/v1/nft/collections/${CARDANO_COLLECTION_ID}/tokens/${id}`
 
 // const blockTestUrl = 'https://cardano-mainnet.tangocrypto.com/d84809bd0eaf4a7897b573fd163734c7/v1/blocks/latest';
 
-async function mintCardanoNFT(base64, title, description) {
-  try {
-    console.log('Minting Cardano NFT ...');
-    const pinBody = {
-      tokens: [
-        {
-          "asset_name": "FlashMint2",
-          "name": title,
-          "description": description,
-          "media_type": "image/jpg",
-          "image": base64,
-          "metadata_attributes": [],
-        }
-      ]
-    };
-    console.log('##pinBody: ', pinBody);
-    const pinResponse = await fetch(pinUrl, {
-      method: 'POST',
+const getPinBody = ({ title, description, base64 }) => ({
+  tokens: [
+    {
+      "asset_name": "FlashMint2",
+      "name": title,
+      "description": description,
+      "media_type": "image/jpg",
+      "image": base64,
+      "metadata_attributes": [],
+    }
+  ]
+});
+
+const getSaleBody = (id) => ({
+  "type": "fixed",
+  "price": 10000000,
+  "reservation_time": 30000,
+  "tokens": [id],
+})
+
+const submitPin = async (pinBody) => {
+  const pinResponse = await fetch(pinUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': TANGO_CRYPTO_API_KEY,
+    },
+    body: JSON.stringify(pinBody),
+  });
+  const pinJson = await pinResponse.json();
+  return pinJson;
+}
+const submitSale = async (saleBody) => {
+  const response = await fetch(saleUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': TANGO_CRYPTO_API_KEY,
+    },
+    body: JSON.stringify(saleBody),
+  })
+  const json = await response.json();
+  return json;
+}
+  
+  const pollTokenEndpoint = async (id) => {
+    const result = await fetch(makeGetTokenUrl(id), {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': TANGO_CRYPTO_API_KEY,
       },
-      body: JSON.stringify(pinBody),
     });
+    const json = await result.json();
+    return json;
+  };
+
+
+  const poll = async function (fn, fnCondition, ms) {
+    let result = await fn();
+    while (fnCondition(result)) {
+      console.log('POLLING!!: ', result);
+      await wait(ms);
+      result = await fn();
+    }
+    return result;
+  };
+  
+  const wait = function (ms = 1000) {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
+  };
+
+async function mintCardanoNFT(base64, title, description) {
+  try {
+    console.log('Minting Cardano NFT ...');
+    const pinBody = getPinBody({ base64, title, description })
+    console.log('##pinBody: ', pinBody);
+    const pinResponse = await submitPin(pinBody);
     console.log('##pinResponse: ', pinResponse);
-    const pinJson = await pinResponse.json();
-    console.log('##pinJson: ', pinJson);
-    if (pinJson.data.length) {
-      const { id } = pinJson.data[0];
+    if (pinResponse.data.length) {
+      const { id, status } = pinResponse.data[0];
       console.log('##NFT id: ', id);
-      const saleBody = {
-        "type": "fixed",
-        "price": 10000000,
-        "reservation_time": 30000,
-        "tokens": [id],
-      };
+      tokenStatus = status;
+      const saleBody = getSaleBody(id);
+      let fetchReport = async () => await pollTokenEndpoint(id);
+      let validate = result => result.status !== 'FOR_SALE';
+      let response = await poll(fetchReport, validate, 1000);
+      console.log('##response: ', response);
       console.log('##saleBody: ', saleBody);
-      console.log('##saleUrl: ', saleUrl)
-      const mintResponse = await fetch(saleUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': TANGO_CRYPTO_API_KEY,
-        },
-        body: JSON.stringify(saleBody),
-      });
-      const mintJson = await mintResponse.json();
-      console.log('##mintJson: ', mintJson);
-      if (mintJson && mintJson.payment_link) {
-        console.log('##paymentLink: ', mintJson.payment_link)
-        return { paymentLink: mintJson.payment_link };
+      console.log('##saleUrl: ', saleUrl);
+      const mintResponse = await submitSale(saleBody);
+      console.log('##mintJson: ', mintResponse);
+      if (mintResponse && mintResponse.payment_link) {
+        console.log('##paymentLink: ', mintResponse.payment_link)
+        return { paymentLink: mintResponse.payment_link };
       }
       throw new Error('no payment link!')
     } else {
