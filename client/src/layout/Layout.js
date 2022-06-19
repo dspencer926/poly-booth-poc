@@ -7,7 +7,7 @@ const useStyles = makeStyles({
     minWidth: '100vw',
   },
   page: {
-    background: '#f9f9f9',
+    background: '#fff',
     boxSizing: 'border-box',
     minHeight: '100vh',
     padding: 32,

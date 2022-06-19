@@ -8,6 +8,7 @@ import ClickDrag from '../components/ClickDrag';
 import MainLogoContainer from '../components/MainLogoContainer';
 import { status, defaultConfig } from '../utils/constants';
 import CardanoLogo from '../assets/cardano-nyc-logo.png';
+import FlashMintLogo from '../assets/flashmint-logo.png';
 import io from 'socket.io-client';
 
 const socket = io.connect('/');
@@ -36,7 +37,7 @@ const FrontPage = () => {
     // TODO: make state var for "loaded/ready"
   }, [])
 
-  const onClickA = () => {
+  const onClickLogo = () => {
     if (clicks === 4) {
       setClicks(0);
       openConfigPanel();
@@ -48,11 +49,11 @@ const FrontPage = () => {
   return (
     <Container>
       {screenStatus === status.VIDEO_SCREEN && (
-        <Typography variant="h3" align="center">
-          Welcome to Fl
-          <span onClick={onClickA}>a</span>
-          shMint!
-        </Typography>
+        <img
+          src={FlashMintLogo}
+          style={{ width: '100%', marginBottom: 36 }}
+          onClick={onClickLogo}
+        />
       )}
       {screenStatus === status.VIDEO_SCREEN && overlay && (
         <Screen
