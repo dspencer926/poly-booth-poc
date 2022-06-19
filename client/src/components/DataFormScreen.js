@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import QrScanner from 'qr-scanner';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -104,6 +104,7 @@ const DataFormScreen = ({
 }) => {
   const classes = useStyles();
   const videoRef = useRef(null);
+  const iframeRef = useRef(null);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const closeQrModal = () => setIsQrModalOpen(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -190,6 +191,10 @@ const DataFormScreen = ({
       qrScanner.start();
     });
   }
+
+  useEffect(() => {
+    iframeRef.current.src = `${paymentLink}&random=${Math.floor(Math.random() * 1000)}`;
+  }, [paymentLink]);
   
   return (
     <Box className={classes.container}>
@@ -321,7 +326,8 @@ const DataFormScreen = ({
               <CloseIcon />
             </IconButton>
             <iframe
-              src={`${paymentLink}&random=${Math.floor(Math.random() * 1000)}`}
+              ref={iframeRef}
+              src={paymentLink}
               title="Purchase Cardano NFT"
               className={classes.cardanoIframe}
               allow={`clipboard-write self ${paymentLink}`}
