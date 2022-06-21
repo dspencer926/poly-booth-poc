@@ -24,7 +24,7 @@ export const defaultConfig = {
   gColorValue: 100,
   rColorValue: 100,
   shouldDisplayRGControls: false,
-  availableNetworks: ['cardano'],
+  availableNetworks: ['polygon'],
   isKeyboardEnabled: false,
 };
 
