@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { dimensions } from '../utils/constants';
 import { getEventLocation, filterPixels } from '../utils/helpers';
-import cardanoImage from '../assets/backdrop.png';
+import backdropImage from '../assets/backdrop.png';
 
 const useScreen = ({                        
   videoRef,
@@ -72,13 +72,13 @@ const useScreen = ({
 
   const applyGreenScreen = () => {
     const canv = canvasRef.current.getContext('2d');
-    const cardanoBG = new Image(600, 600);
-    cardanoBG.src = cardanoImage;
+    const background = new Image(600, 600);
+    background.src = backdropImage;
     const foreground = new Image(600, 600);
     const foregroundImage = filterPixels(originalImage, config);
     canv.clearRect(0, 0, 600, 600);
     foreground.src = foregroundImage;
-    setTimeout(() => canv.drawImage(cardanoBG, 0, 0), 100);
+    setTimeout(() => canv.drawImage(background, 0, 0), 100);
     setTimeout(() => canv.drawImage(foreground, 0, 0), 200);
     setTimeout(() => canv.drawImage(overlay, -125, -125), 300);
   }

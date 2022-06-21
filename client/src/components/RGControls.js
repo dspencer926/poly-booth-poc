@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -45,6 +45,10 @@ const RGControls = ({
   const decrementGreen = () => setConfig({ ...config, gColorValue: gColorValue - 5 });
   const incrementGreen = () => setConfig({ ...config, gColorValue: gColorValue + 5 });
 
+  useEffect(() => {
+    applyGreenScreen();
+  }, [config.gColorValue, config.rColorValue]);
+
   return (
     <Box className={classes.modalContainer}>
       <Box>
@@ -81,7 +85,6 @@ const RGControls = ({
           </IconButton>
         </Box>
       </Box>
-      <Button onClick={applyGreenScreen}>Apply</Button>
     </Box>
   )
 };

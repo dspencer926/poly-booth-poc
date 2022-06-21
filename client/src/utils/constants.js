@@ -19,7 +19,7 @@ export const dimensions = {
 };
 
 export const defaultConfig = {
-  isGreenScreenEnabled: true,
+  isGreenScreenEnabled: false,
   isDigitalPropsEnabled: false,
   gColorValue: 100,
   rColorValue: 100,

@@ -7,7 +7,8 @@ import ConfigPanel from '../components/ConfigPanel';
 import ClickDrag from '../components/ClickDrag';
 import MainLogoContainer from '../components/MainLogoContainer';
 import { status, defaultConfig } from '../utils/constants';
-import CardanoLogo from '../assets/cardano-nyc-logo.png';
+// import CardanoLogo from '../assets/cardano-nyc-logo.png';
+import ETHSDLogo from '../assets/eth-sd-logo.png';
 import FlashMintLogo from '../assets/flashmint-logo.png';
 import io from 'socket.io-client';
 
@@ -28,7 +29,7 @@ const FrontPage = () => {
   const navigateToInstructionScreen = () => setScreenStatus(status.INSTRUCTION_SCREEN);
   const openConfigPanel = () => setIsConfigPanelOpen(true);
   const closeConfigPanel = () => setIsConfigPanelOpen(false);
-  const { isDigitalPropsEnabled, isKeyboardEnabled } = config;
+const { isDigitalPropsEnabled, isKeyboardEnabled } = config;
 
   useEffect(() => {
     const overlay = new Image();
@@ -96,7 +97,7 @@ const FrontPage = () => {
         setConfig={setConfig}
         closeConfigPanel={closeConfigPanel}
       />
-      <MainLogoContainer logo={CardanoLogo} />
+      <MainLogoContainer logo={ETHSDLogo} />
     </Container>
   )
 }

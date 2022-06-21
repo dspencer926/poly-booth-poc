@@ -78,6 +78,9 @@ const useStyles = makeStyles({
     minWidth: 500,
     minHeight: 780,
   },
+  keyboardContainer: {
+    marginBottom: 42,
+  }
 });
 
 const validationSchema = yup.object({
@@ -113,6 +116,7 @@ const DataFormScreen = ({
   const [focusedInput, setFocusedInput] = useState(null);
   const [keyboardLayout, setKeyboardLayout] = useState('default');
   const { isKeyboardEnabled, availableNetworks } = config;
+  const closeLoadingModal = () => setIsLoading(false);
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -294,6 +298,12 @@ const DataFormScreen = ({
           />)}
         </Box>
       </form>
+      <Box className={classes.keyboardContainer}>
+        <Keyboard
+          onKeyPress={onKeyPress}
+          layoutName={keyboardLayout}
+        />
+      </Box>
       <BottomButtonRow
         onClickLeftButton={navigateToVideoScreen}
         onClickRightButton={formik.handleSubmit}
@@ -324,6 +334,7 @@ const DataFormScreen = ({
       <LoadingModal
         isOpen={isLoading}
         socket={socket}
+        closeModal={closeLoadingModal}
       />
       <Modal
         className={classes.modalCentered}
@@ -351,11 +362,6 @@ const DataFormScreen = ({
           </Box>
         </Fade>
       </Modal>
-      <Keyboard
-        onKeyPress={onKeyPress}
-        layoutName={keyboardLayout}
-        // theme={classes.keyboard}
-      />
     </Box>
   );
 };

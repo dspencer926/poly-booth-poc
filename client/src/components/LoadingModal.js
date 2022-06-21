@@ -4,9 +4,11 @@ import {
   Typography,
   Modal,
   CircularProgress,
-  Fade
+  Fade,
+  IconButton
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 import PendingIcon from '@mui/icons-material/Pending';
 import { makeStyles } from '@mui/styles';
 
@@ -35,6 +37,11 @@ const useStyles = makeStyles({
     height: 120,
     justifyContent: 'space-around',
   },
+  closeModalButton: {
+    right: 12,
+    position: 'absolute !important',
+    top: 12,
+  },
   row: {
     alignItems: 'center',
     display: 'flex',
@@ -51,6 +58,7 @@ const useStyles = makeStyles({
 const LoadingModal = ({
   isOpen,
   socket,
+  closeModal,
 }) => {
   const [imageStatus, setImageStatus] = useState('loading');
   const [metaDataStatus, setMetaDataStatus] = useState('pending');
@@ -93,6 +101,12 @@ const LoadingModal = ({
       <Fade in={isOpen}>
         <Box className={classes.modalContainer}>
           <Box className={classes.modalContent}>
+            <IconButton
+              className={classes.closeModalButton}
+              onClick={closeModal}
+            >
+              <CloseIcon />
+            </IconButton>
             <Box className={classes.row}>
               {getIcon(imageStatus)}
               <Typography>

@@ -40,8 +40,10 @@ socket.on('connection', client => {
       // write image to disk
       fs.writeFile(imageFilename, buf, async function(err) {
         if(err) {
-          console.error(err);
-          return res.status(500).send(err);
+          console.log('Error!')
+          socket.emit('response', ({
+            error: err,
+          }));
         }
         console.log('Uploading image to IPFS');
         // upload image to IPFS
@@ -58,7 +60,10 @@ socket.on('connection', client => {
         // write metadata to disk
         fs.writeFile(metaDataFilename, metaData, async function(err) {
           if (err) {
-            return res.status(500).send(err);
+            console.log('Error!')
+            socket.emit('response', ({
+              error: err,
+            }));
           }
           // mint NFT
           if (network === 'cardano') {
@@ -80,12 +85,12 @@ socket.on('connection', client => {
               socket.emit('response', ({
                 txId: transactionReceipt.transactionHash,
                 nonce,
-              }))
+              }));
             } else {
               console.log('Error!')
               socket.emit('response', ({
-                error: true,
-              }))
+                error: 'no transaction receipt',
+              }));
             }
           }
         }); 
