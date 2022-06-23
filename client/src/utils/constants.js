@@ -19,11 +19,11 @@ export const dimensions = {
 };
 
 export const defaultConfig = {
-  isGreenScreenEnabled: false,
+  isGreenScreenEnabled: true,
   isDigitalPropsEnabled: false,
   gColorValue: 100,
   rColorValue: 100,
-  shouldDisplayRGControls: false,
+  shouldDisplayRGControls: true,
   availableNetworks: ['cardano'],
   isKeyboardEnabled: false,
 };
