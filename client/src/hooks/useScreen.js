@@ -71,16 +71,19 @@ const useScreen = ({
   };
 
   const applyGreenScreen = () => {
-    const canv = canvasRef.current.getContext('2d');
-    const background = new Image(600, 600);
-    background.src = backdropImage;
-    const foreground = new Image(600, 600);
-    const foregroundImage = filterPixels(originalImage, config);
-    canv.clearRect(0, 0, 600, 600);
-    foreground.src = foregroundImage;
-    setTimeout(() => canv.drawImage(background, 0, 0), 100);
-    setTimeout(() => canv.drawImage(foreground, 0, 0), 200);
-    setTimeout(() => canv.drawImage(overlay, -125, -125), 300);
+    if (originalImage) {
+      const canv = canvasRef.current.getContext('2d');
+      const background = new Image(600, 600);
+      background.src = backdropImage;
+      const foreground = new Image(600, 600);
+      console.log('##orignalImage: ', originalImage);
+      const foregroundImage = filterPixels(originalImage, config);
+      canv.clearRect(0, 0, 600, 600);
+      foreground.src = foregroundImage;
+      setTimeout(() => canv.drawImage(background, 0, 0), 100);
+      setTimeout(() => canv.drawImage(foreground, 0, 0), 200);
+      setTimeout(() => canv.drawImage(overlay, -125, -125), 300);
+    }
   }
 
   useEffect(() => {
@@ -103,7 +106,11 @@ const useScreen = ({
   }, [count]);
 
   useEffect(() => {
-    if (originalImage && config.isGreenScreenEnabled) applyGreenScreen();
+    console.log('##originalImage: ', originalImage);
+    if (originalImage && config.isGreenScreenEnabled) {
+      console.log('##originalImage: ', originalImage);
+      applyGreenScreen();
+    }
   }, [originalImage, config.isGreenScreenEnabled]);
   
   useEffect(() => {
